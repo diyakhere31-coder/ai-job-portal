@@ -1,4 +1,4 @@
-\# AI-Based Job Portal 🧠💼
+\ AI-Based Job Portal 🧠💼
 
 
 
@@ -6,7 +6,7 @@ An intelligent, domain-aware job portal built using Django that leverages NLP an
 
 
 
-\## 🚀 Key Features
+\🚀 Key Features
 
 \- AI-powered resume-to-job matching using TF-IDF \& cosine similarity
 
@@ -22,7 +22,7 @@ An intelligent, domain-aware job portal built using Django that leverages NLP an
 
 
 
-\## 🧠 AI Logic
+\🧠 AI Logic
 
 \- Extracts clean skills from resumes \& job descriptions
 
@@ -34,7 +34,7 @@ An intelligent, domain-aware job portal built using Django that leverages NLP an
 
 
 
-\## 🛠 Tech Stack
+\🛠 Tech Stack
 
 \- Backend: Django, Python
 
@@ -46,7 +46,7 @@ An intelligent, domain-aware job portal built using Django that leverages NLP an
 
 
 
-\## 📌 Note
+\📌 Note
 
 This repository intentionally excludes personal data such as resumes, media files, and databases for security reasons.
 
