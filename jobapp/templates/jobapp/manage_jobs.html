@@ -1,0 +1,36 @@
+{% extends 'admin_dashboard.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h3>All Job Listings</h3>
+
+  <h5 class="mt-3 text-info">IT Jobs</h5>
+  <table class="table table-bordered text-white">
+    <thead><tr><th>Company</th><th>Title</th><th>Location</th></tr></thead>
+    <tbody>
+      {% for job in it_jobs %}
+      <tr><td>{{ job.company_name }}</td><td>{{ job.job_title }}</td><td>{{ job.job_location }}</td></tr>
+      {% empty %}<tr><td colspan="3">No IT jobs found.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+
+  <h5 class="mt-4 text-info">Mechanical Jobs</h5>
+  <table class="table table-bordered text-white">
+    <thead><tr><th>Company</th><th>Title</th><th>Location</th></tr></thead>
+    <tbody>
+      {% for job in mech_jobs %}
+      <tr><td>{{ job.company_name }}</td><td>{{ job.job_title }}</td><td>{{ job.job_location }}</td></tr>
+      {% empty %}<tr><td colspan="3">No Mechanical jobs found.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+
+  <h5 class="mt-4 text-info">Civil Jobs</h5>
+  <table class="table table-bordered text-white">
+    <thead><tr><th>Company</th><th>Title</th><th>Location</th></tr></thead>
+    <tbody>
+      {% for job in civil_jobs %}
+      <tr><td>{{ job.company_name }}</td><td>{{ job.job_title }}</td><td>{{ job.job_location }}</td></tr>
+      {% empty %}<tr><td colspan="3">No Civil jobs found.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

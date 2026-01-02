@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Login</title>
+
+    <!-- Lottie Files -->
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #80a1c5, #a2bbc7);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .login-wrapper {
+            display: flex;
+            background: #fff;
+            width: 900px;
+            max-width: 95%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+        }
+
+        .left {
+            width: 50%;
+            background: #f7fbff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        dotlottie-wc {
+            width: 100%;
+            max-width: 380px;
+            height: 360px;
+        }
+
+        .right {
+            width: 50%;
+            padding: 40px;
+        }
+
+        h3 {
+            text-align: center;
+            color: #0056d6;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .form-control {
+            width: 100%;
+            height: 45px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            padding-left: 12px;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: #0066ff;
+            border: none;
+            color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: #004ecc;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        @media(max-width: 768px) {
+            .login-wrapper {
+                flex-direction: column;
+            }
+
+            .left, .right {
+                width: 100%;
+            }
+
+            dotlottie-wc {
+                height: 260px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-wrapper">
+
+    <!-- Left Animation -->
+    <div class="left">
+        <dotlottie-wc
+            src="https://lottie.host/f92df8b6-cf92-452f-a10b-fe2fd44d0df2/dTdFltV6PQ.lottie"
+            style="width: 350px;height: 350px"
+            autoplay
+            loop>
+        </dotlottie-wc>
+    </div>
+
+    <!-- Right Login Form -->
+    <div class="right">
+
+        <h3>Recruiter Login</h3>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <input type="text" name="username" placeholder="Username" class="form-control" required>
+
+            <input type="password" name="password" placeholder="Password" class="form-control" required>
+
+            <button type="submit" class="btn-primary">Login</button>
+        </form>
+
+        <p>Don’t have an account? 
+            <a href="{% url 'recruiter_register' %}">Register</a>
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>

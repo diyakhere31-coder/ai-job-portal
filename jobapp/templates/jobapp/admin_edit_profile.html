@@ -1,0 +1,50 @@
+{% extends 'jobapp/base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+    <h3 class="fw-bold mb-4">Edit My Profile</h3>
+
+    <form method="POST" enctype="multipart/form-data" class="card p-4 shadow">
+        {% csrf_token %}
+
+        <!-- Profile Picture Preview -->
+        <div class="text-center mb-4">
+            {% if request.user.profile_pic %}
+                <img src="{{ request.user.profile_pic.url }}" 
+                     width="140" height="140" 
+                     class="rounded-circle shadow" style="object-fit: cover;">
+            {% else %}
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                     width="140" height="140"
+                     class="rounded-circle shadow">
+            {% endif %}
+        </div>
+
+        <!-- Upload New Image -->
+        <label class="fw-bold">Change Profile Picture</label>
+        <input type="file" name="profile_pic" class="form-control mb-4">
+
+        <!-- User Information Fields -->
+        <label class="fw-bold">First Name</label>
+        <input type="text" name="first_name" value="{{ request.user.first_name }}" class="form-control mb-3">
+
+        <label class="fw-bold">Last Name</label>
+        <input type="text" name="last_name" value="{{ request.user.last_name }}" class="form-control mb-3">
+
+        <label class="fw-bold">Email</label>
+        <input type="email" name="email" value="{{ request.user.email }}" class="form-control mb-3">
+
+        <label class="fw-bold">Username</label>
+        <input type="text" name="username" value="{{ request.user.username }}" class="form-control mb-3">
+
+        <label class="fw-bold">Phone Number</label>
+        <input type="text" name="phone" value="{{ request.user.phone }}" class="form-control mb-3">
+
+        <label class="fw-bold">About / Bio</label>
+        <textarea name="bio" class="form-control mb-3" rows="3">{{ request.user.bio }}</textarea>
+
+        <button class="btn btn-success px-4">Save Changes</button>
+    </form>
+</div>
+
+{% endblock %}

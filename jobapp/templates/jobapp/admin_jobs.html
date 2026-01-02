@@ -1,0 +1,154 @@
+{% extends 'jobapp/base.html' %}
+{% load static %}
+{% block title %}All Job Posts{% endblock %}
+
+{% block content %}
+
+<style>
+    .job-card {
+        border-radius: 16px;
+        padding: 22px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        transition: 0.3s ease;
+        position: relative;
+    }
+
+    .job-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+    .job-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 4px;
+    }
+
+    .company {
+        font-size: 15px;
+        color: #475569;
+        font-weight: 600;
+    }
+
+    .tag-category {
+        background: #fef3c7;
+        color: #b45309;
+        padding: 5px 10px;
+        font-size: 13px;
+        border-radius: 8px;
+        font-weight: 600;
+        margin-right: 8px;
+    }
+
+    .tag-location {
+        background: #dcfce7;
+        color: #166534;
+        padding: 5px 10px;
+        font-size: 13px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .posted-date {
+        font-size: 14px;
+        margin-top: 10px;
+        color: #64748b;
+    }
+
+    .view-btn {
+        border-radius: 25px;
+        margin-top: 10px;
+    }
+
+    .job-description {
+        display: none;
+        border-top: 1px solid #e2e8f0;
+        margin-top: 15px;
+        padding-top: 15px;
+        color: #334155;
+    }
+</style>
+
+<div class="container mt-4 mb-4">
+    <h2 class="mb-4 fw-bold text-primary">All Job Posts</h2>
+
+    {% if jobs %}
+        <div class="row">
+            {% for job in jobs %}
+            <div class="col-md-6 mb-4">
+                <div class="job-card">
+
+                    <h4 class="job-title">{{ job.job_title }}</h4>
+                    <p class="company">{{ job.company_name }}</p>
+
+                    <div class="mb-2">
+                        <span class="tag-category">
+                            🏷 
+                            {% if job.job_category %}
+                                {{ job.job_category }}
+                            {% else %}
+                                {{ job.category_name }}
+                            {% endif %}
+                        </span>
+
+                        <span class="tag-location">
+                            📍 {{ job.job_location }}
+                        </span>
+                    </div>
+
+                    <p class="posted-date">
+                        🗓 Posted on: {{ job.posted_on|date:"d M Y" }}
+                    </p>
+
+                    <!-- View Description Button -->
+                    <button class="btn btn-primary view-btn view-desc-btn"
+                            data-job-id="{{ job.id }}">
+                        View Description
+                    </button>
+
+                    <!-- Job Description -->
+                    <div id="desc-{{ job.id }}" class="job-description">
+
+                        {% if job.job_description %}
+                            <p><strong>Description:</strong><br>
+                                {{ job.job_description }}
+                            </p>
+                        {% else %}
+                            <p class="text-muted"><strong>Description:</strong><br>
+                                No description available.
+                            </p>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <p class="no-data">No jobs found.</p>
+    {% endif %}
+</div>
+
+<!-- Toggle Script -->
+<script>
+    document.querySelectorAll('.view-desc-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const jobId = button.dataset.jobId;
+            const desc = document.getElementById(`desc-${jobId}`);
+
+            if (desc.style.display === 'none' || desc.style.display === '') {
+                desc.style.display = 'block';
+                button.textContent = 'Hide Description';
+            } else {
+                desc.style.display = 'none';
+                button.textContent = 'View Description';
+            }
+        });
+    });
+</script>
+
+{% endblock %}

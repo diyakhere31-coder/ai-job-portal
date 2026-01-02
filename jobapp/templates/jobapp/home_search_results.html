@@ -1,0 +1,35 @@
+{% extends 'jobapp/base.html' %}
+{% load static %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <h2 class="mb-4">Search Results</h2>
+
+        {% if results %}
+            {% for job in results %}
+            <div class="card shadow-sm p-4 mb-4" style="border-radius: 15px;">
+                <h4 class="fw-bold">{{ job.job_title }}</h4>
+                <p class="text-muted mb-1">{{ job.company_name }}</p>
+
+                <p>
+                    <strong>Category:</strong> {{ job.job_category }} <br>
+                    <strong>Location:</strong> {{ job.job_location }} <br>
+                    <strong>Salary:</strong> {{ job.salary }}
+                </p>
+
+                <a href="{% url 'job_detail_it' job.id %}" class="btn btn-primary w-100">
+                    View Job
+                </a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning mt-4">
+                No jobs found for "<strong>{{ query }}</strong>".
+            </div>
+        {% endif %}
+
+</div>
+{% endblock %}

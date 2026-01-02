@@ -1,0 +1,136 @@
+{% extends 'jobapp/base.html' %}
+{% block content %}
+
+<style>
+    .profile-card {
+        background: #fff;
+        padding: 25px;
+        border-radius: 16px;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        margin-top: 30px;
+    }
+
+    .profile-left h3 {
+        font-weight: 700;
+        color: #1a237e;
+    }
+
+    .profile-left p {
+        margin: 2px 0;
+        font-size: 15px;
+        color: #444;
+    }
+
+    .profile-pic {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #1a237e;
+        box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+
+    .section-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a237e;
+        margin-top: 40px;
+    }
+
+    .jobs-table {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    }
+
+    .jobs-table th {
+        background: #1a237e;
+        color: #fff;
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    .jobs-table td {
+        vertical-align: middle !important;
+        font-size: 14px;
+    }
+
+    .no-jobs-box {
+        background: #e3f2fd;
+        padding: 15px;
+        border-radius: 12px;
+        text-align: center;
+        color: #0d47a1;
+        font-weight: 500;
+        margin-top: 20px;
+    }
+</style>
+
+<!-- Recruiter Profile Section -->
+<div class="profile-card d-flex justify-content-between align-items-center">
+
+    <div class="profile-left">
+        <h3>{{ recruiter.username }}</h3>
+        <p><strong>Email:</strong> {{ recruiter.email }}</p>
+        <p><strong>Joined:</strong> {{ recruiter.date_joined|date:"d M Y" }}</p>
+    </div>
+
+    {% if recruiter.profile_pic %}
+        <img src="{{ recruiter.profile_pic.url }}" class="profile-pic">
+    {% else %}
+        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-pic">
+    {% endif %}
+</div>
+
+
+<!-- Jobs Section -->
+<h3 class="section-title">Jobs Posted by {{ recruiter.username }}</h3>
+
+{% if jobs %}
+<div class="table-responsive jobs-table mt-3">
+    <table class="table table-bordered table-striped mb-0">
+        <thead>
+            <tr>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Category</th>
+                <th>Location</th>
+                <th>Posted On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td>{{ job.job_title }}</td>
+                <td>{{ job.company_name }}</td>
+
+                <td>
+                    {% if job.category_name %}
+                        {{ job.category_name }}
+                    {% else %}
+                        {{ job.job_category }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if job.job_location %}
+                        {{ job.job_location }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+
+                <td>{{ job.posted_on|date:"d M Y" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% else %}
+<div class="no-jobs-box">
+    No jobs have been posted by this recruiter yet.
+</div>
+{% endif %}
+
+{% endblock %}

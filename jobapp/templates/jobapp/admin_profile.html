@@ -1,0 +1,63 @@
+{% extends 'jobapp/base.html' %}
+{% block content %}
+
+<style>
+    .profile-pic-container {
+        position: relative;
+        display: inline-block;
+    }
+    .upload-btn {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: #0d6efd;
+        color: white;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        font-size: 20px;
+        border: 2px solid white;
+    }
+</style>
+
+<div class="container mt-5">
+    <h3 class="fw-bold mb-4">My Profile</h3>
+
+    <div class="card shadow p-4 border-0" style="max-width: 450px; margin: auto;">
+
+        <!-- Profile Picture + Upload Button -->
+        <div class="text-center mb-3">
+            <div class="profile-pic-container">
+                {% if request.user.profile_pic %}
+                    <img src="{{ request.user.profile_pic.url }}"
+                         class="rounded-circle shadow"
+                         width="150" height="150" style="object-fit: cover;">
+                {% else %}
+                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                         class="rounded-circle shadow"
+                         width="150" height="150">
+                {% endif %}
+
+                <a href="{% url 'admin_edit_profile' %}" class="upload-btn">+</a>
+            </div>
+        </div>
+
+        <h4 class="fw-bold text-center">{{ request.user.first_name }} {{ request.user.last_name }}</h4>
+        <p class="text-muted text-center">@{{ request.user.username }}</p>
+        <p class="text-muted text-center">{{ request.user.email }}</p>
+
+        <hr>
+
+        <div class="d-flex justify-content-center gap-3 mt-3">
+            <a href="{% url 'admin_profile' %}" class="btn btn-outline-primary">View Profile</a>
+            <a href="{% url 'admin_edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

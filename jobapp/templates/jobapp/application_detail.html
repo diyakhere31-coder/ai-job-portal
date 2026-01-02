@@ -1,0 +1,131 @@
+{% extends 'jobapp/base.html' %}
+
+{% block title %}Applicant Details{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow border-0 rounded-4">
+        <div class="card-body p-4">
+
+            <!-- Header Section -->
+            <div class="d-flex align-items-center mb-3">
+                <div class="flex-grow-1">
+                    <h3 class="fw-bold mb-1">{{ app.name }}</h3>
+                    <p class="text-muted mb-0">
+                        <i class="bi bi-envelope"></i> {{ app.email }} &nbsp; | &nbsp;
+                        <i class="bi bi-telephone"></i> {{ app.contact }}
+                    </p>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- Job Information -->
+            <h5 class="fw-semibold text-primary mb-3">Job Information</h5>
+            <div class="row mb-4">
+                <div class="col-md-6 mb-2">
+                    <strong class="text-dark">Applied For:</strong><br>
+                    <span class="text-muted">{{ app.job_title }} ({{ app.category }})</span>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <strong class="text-dark">Company:</strong><br>
+                    <span class="text-muted">{{ app.company_name }}</span>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <strong class="text-dark">Location:</strong><br>
+                    <span class="text-muted">{{ app.job_location|default:"Not Provided" }}</span>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <strong class="text-dark">Salary:</strong><br>
+                    <span class="text-muted">₹ {{ app.salary|default:"Not Provided" }}</span>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- Applicant Details -->
+            <h5 class="fw-semibold text-primary mb-3">Applicant Information</h5>
+            <div class="row mb-4">
+                <div class="col-md-6 mb-2">
+                    <strong class="text-dark">Qualification:</strong><br>
+                    <span class="text-muted">{{ app.qualification }}</span>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <strong class="text-dark">Applied On:</strong><br>
+                    <span class="text-muted">{{ app.applied_on|date:"M d, Y" }}</span>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- AI Screening Section -->
+            <h5 class="fw-semibold text-primary mb-3">🤖 AI Resume Screening</h5>
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <strong class="text-dark">AI Match Score:</strong>
+                    <div class="mt-2">
+                        <span class="badge 
+                            {% if app.ai_score >= 75 %}bg-success
+                            {% elif app.ai_score >= 50 %}bg-warning text-dark
+                            {% else %}bg-danger{% endif %}
+                            px-3 py-2 rounded-pill">
+                            {{ app.ai_score }}%
+                            {% if app.ai_score >= 75 %} High Match
+                            {% elif app.ai_score >= 50 %} Moderate Match
+                            {% else %} Low Match{% endif %}
+                        </span>
+                    </div>
+                    <div class="progress mt-2" style="height: 8px;">
+                        <div class="progress-bar
+                            {% if app.ai_score >= 75 %}bg-success
+                            {% elif app.ai_score >= 50 %}bg-warning
+                            {% else %}bg-danger{% endif %}"
+                            role="progressbar"
+                            data-score="{{ app.ai_score|default:0 }}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <strong class="text-dark">AI Resume Summary:</strong><br>
+                    {% if app.ai_summary %}
+                        <p><em>{{ app.ai_summary }}</em></p>
+                    {% else %}
+                        <p class="text-muted">AI summary will be generated after resume screening.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- Resume Section -->
+            <h5 class="fw-semibold text-primary mb-3">Resume</h5>
+            {% if app.resume %}
+                <a href="{{ app.resume.url }}" class="btn btn-outline-primary btn-lg rounded-pill px-4 mb-3" target="_blank">
+                    <i class="bi bi-file-earmark-person"></i> View Resume
+                </a>
+            {% else %}
+                <p class="text-muted mb-3">No resume uploaded</p>
+            {% endif %}
+
+            <!-- Back Button aligned right at the bottom -->
+            <div class="d-flex justify-content-end">
+                <a href="{% url 'applicants_list' %}" class="btn btn-outline-info btn-lg rounded-pill px-4 mb-3">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.progress-bar').forEach(bar => {
+        bar.style.width = bar.dataset.score + '%';
+    });
+});
+</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+{% endblock %}

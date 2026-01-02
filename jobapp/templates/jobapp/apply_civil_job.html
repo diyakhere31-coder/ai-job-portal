@@ -1,0 +1,60 @@
+{% extends 'jobapp/base.html' %}
+{% block title %}Apply for Civil Job{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg p-4">
+    <h2 class="text-center mb-4 text-success">Apply for {{ job.job_title }} (Civil)</h2>
+    <p class="text-center text-muted">at <strong>{{ job.company_name }}</strong></p>
+
+    <div class="mb-4">
+      <h5>Job Description:</h5>
+      <p>{{ job.job_description }}</p>
+
+      <h5>Required Skills:</h5>
+      <p>{{ job.required_skills }}</p>
+      <ul>
+        <li><strong>Location:</strong> {{ job.job_location }}</li>
+        <li><strong>Experience Required:</strong> {{ job.experience }} years</li>
+        <li><strong>Salary:</strong> ₹{{ job.salary }}</li>
+      </ul>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Full Name</label>
+          <input type="text" name="name" class="form-control" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Email Address</label>
+          <input type="email" name="email" class="form-control" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Contact Number</label>
+          <input type="tel" name="contact" class="form-control" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Highest Qualification</label>
+          <input type="text" name="qualification" class="form-control" required>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Upload Resume (PDF/DOC)</label>
+        <input type="file" name="resume" class="form-control" accept=".pdf,.doc,.docx" required>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100">Submit Application</button>
+    </form>
+
+    {% if message %}
+      <div class="alert alert-success mt-3 text-center">{{ message }}</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

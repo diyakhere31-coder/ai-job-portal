@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}All Other Jobs{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-success fw-bold text-center mb-4">🌍 Other Jobs</h2>
+
+  <a href="{% url 'user_dashboard' %}" class="btn btn-outline-primary me-2">
+    ← Back to Dashboard
+  </a>
+  <br><br>
+
+  <div class="row">
+    {% for job in other_jobs %}
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="text-primary fw-bold">{{ job.job_title }}</h5>
+
+          <p><b>Company:</b> {{ job.company_name }}</p>
+
+          <p><b>Category:</b> 
+            {% if job.job_category %}
+                {{ job.job_category }}
+            {% else %}
+                {{ job.category_name }}
+            {% endif %}
+          </p>
+
+          <p><b>Location:</b> {{ job.job_location }}</p>
+          <p><b>Salary:</b> ₹ {{ job.salary }}</p>
+
+          <a href="{% url 'job_detail' job.id %}" 
+             class="btn btn-outline-primary btn-sm">
+             View Details
+          </a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p class="text-muted text-center mt-4">No other jobs available currently.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

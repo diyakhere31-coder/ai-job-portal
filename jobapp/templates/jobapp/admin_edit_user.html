@@ -1,0 +1,147 @@
+{% extends 'jobapp/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .edit-container {
+        max-width: 780px;
+        margin: auto;
+        background: #ffffff;
+        padding: 35px;
+        border-radius: 18px;
+        box-shadow: 0 5px 18px rgba(0,0,0,0.12);
+        margin-top: 40px;
+    }
+
+    .edit-title {
+        font-weight: 800;
+        color: #1a237e;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    /* Profile photo */
+    .profile-pic-wrapper {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .profile-pic {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #1a237e;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.20);
+    }
+
+    .upload-btn {
+        margin-top: 10px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: 600;
+    }
+
+    .section-label {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #1a237e;
+    }
+
+    .btn-primary-custom {
+        background: #1a237e;
+        border: none;
+        padding: 10px 25px;
+        font-weight: 600;
+    }
+
+    .btn-primary-custom:hover {
+        background: #000d4b;
+    }
+
+</style>
+
+<div class="edit-container">
+    <h2 class="edit-title">Edit User Profile</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Profile Image -->
+        <div class="profile-pic-wrapper">
+            {% if user.profile_pic %}
+                <img src="{{ user.profile_pic.url }}" class="profile-pic" alt="Profile Picture">
+            {% else %}
+                <img src="{% static 'images/default_user.png' %}" class="profile-pic" alt="Default Profile">
+            {% endif %}
+
+
+            <input type="file" name="profile_pic" class="form-control mt-3" style="max-width: 250px; margin: auto;">
+        </div>
+
+        <!-- Personal Information -->
+        <p class="section-label">Personal Information</p>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>First Name</label>
+                <input type="text" name="first_name" class="form-control" 
+                       value="{{ user.first_name }}">
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Last Name</label>
+                <input type="text" name="last_name" class="form-control" 
+                       value="{{ user.last_name }}">
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" 
+                   value="{{ user.email }}">
+        </div>
+
+        <div class="mb-3">
+            <label>Username</label>
+            <input type="text" name="username" class="form-control" 
+                   value="{{ user.username }}">
+        </div>
+
+        <!-- Roles -->
+        <p class="section-label">Role Settings</p>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label">User Role</label>
+                <select name="role" class="form-control">
+                    <option value="user" {% if user.is_user %}selected{% endif %}>User</option>
+                    <option value="recruiter" {% if user.is_recruiter %}selected{% endif %}>Recruiter</option>
+                    <option value="admin" {% if user.is_admin %}selected{% endif %}>Admin</option>
+                </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Status</label>
+                <select name="is_active" class="form-control">
+                    <option value="1" {% if user.is_active %}selected{% endif %}>Active</option>
+                    <option value="0" {% if not user.is_active %}selected{% endif %}>Inactive</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-primary-custom">Save Changes</button>
+            <a href="{% url 'admin_users' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

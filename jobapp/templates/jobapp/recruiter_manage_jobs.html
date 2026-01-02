@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Manage Your Posted Jobs{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-primary">🧾 Manage Your Posted Jobs</h2>
+        <p class="text-muted fs-5">Review, edit, or remove job listings you’ve created.</p>
+    </div>
+
+    <!-- Job Table -->
+    <div class="card border-0 shadow-lg rounded-4">
+        <div class="card-header bg-dark text-white rounded-top-4 d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 fw-semibold">📋 All Posted Jobs</h4>
+            <span class="badge bg-light text-dark px-3 py-2">Total: {{ jobs|length }}</span>
+        </div>
+        <div class="card-body p-0">
+            {% if jobs %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-primary">
+                        <tr class="text-center">
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Company</th>
+                            <th>Category</th>
+                            <th>Location</th>
+                            <th>Salary</th>
+                            <th>Posted On</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for job in jobs %}
+                        <tr class="text-center">
+                            <td class="fw-bold text-secondary">{{ forloop.counter }}</td>
+                            <td class="fw-semibold text-primary">{{ job.job_title }}</td>
+                            <td>{{ job.company_name }}</td>
+                            <td>
+                                {% if job.job_category %}
+                                    {{ job.job_category }}
+                                {% else %}
+                                    {{ job.category_name }}
+                                {% endif %}
+                            </td>
+                            <td>{{ job.job_location }}</td>
+                            <td>₹ {{ job.salary }}</td>
+                            <td>{{ job.posted_on|date:"d M Y" }}</td>
+
+                            <td>
+                                <a href="{% url 'edit_job' job.id %}" 
+                                   class="btn btn-outline-warning btn-sm rounded-pill me-1">
+                                    ✏️ Edit
+                                </a>
+
+                                <a href="{% url 'delete_job' job.id %}" 
+                                   class="btn btn-outline-danger btn-sm rounded-pill"
+                                   onclick="return confirm('Are you sure you want to delete this job?')">
+                                    🗑️ Delete
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info text-center mb-0 py-4 fs-5 rounded-0">
+                You haven’t posted any jobs yet.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Bottom Button -->
+    <div class="text-center mt-4">
+        <a href="{% url 'recruiter_dashboard' %}" class="btn btn-outline-primary px-5 py-2 rounded-pill fw-semibold">
+            ⬅️ Back to Dashboard
+        </a>
+    </div>
+
+</div>
+{% endblock %}

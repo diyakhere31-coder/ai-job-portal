@@ -1,0 +1,225 @@
+{% extends 'jobapp/base.html' %}
+{% load static %}
+{% block content %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body { font-family: 'Inter', sans-serif; background: #f4f5f9; color: #1f2937; }
+.sidebar {
+    width: 260px;
+    position: fixed;
+    top: 0; /* ensure it starts from top */
+    height: 100vh;
+    background: #0f172a;
+    padding-top: 20px; /* reduce top padding */
+    color: #fff;
+}
+.content {
+    margin-left: 260px;
+    padding: 40px 40px 40px 40px; /* reduce top padding */
+}
+.sidebar .menu-title {
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #fff;
+}
+.sidebar img {
+    display: block;
+    margin: auto;
+    margin-bottom: 15px;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 2px solid #1e90ff;
+    object-fit: cover;
+}
+.sidebar h5 {
+    text-align: center;
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+.sidebar p {
+    text-align: center;
+    font-size: 13px;
+    color: #cbd5e1;
+    margin-bottom: 15px;
+}
+.sidebar a { display: flex; align-items: center; padding: 12px 20px; color: #cbd5e1; text-decoration: none; border-radius: 10px; margin: 5px 12px; transition: 0.25s; }
+.sidebar a:hover, .sidebar a.active { background: #3b82f6; color: #fff; }
+.content { margin-left: 260px; padding: 20px 30px }
+.metric-card { padding: 25px; background: #fff; border-radius: 18px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); text-align: center; transition: 0.3s; }
+.metric-card:hover { transform: translateY(-6px); box-shadow: 0 14px 28px rgba(0,0,0,0.12); }
+.metric-card h2 { font-size: 32px; font-weight: 700; color: #111827; margin: 0; }
+.metric-card h6 { font-size: 14px; font-weight: 500; color: #6b7280; margin-bottom: 6px; }
+.section-title { font-weight: 700; font-size: 20px; margin-top: 40px; margin-bottom: 20px; color: #111827; }
+.data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 20px; }
+.data-card { background: #fff; padding: 18px 20px; border-radius: 16px; box-shadow: 0 6px 22px rgba(0,0,0,0.08); border-left: 5px solid #3b82f6; transition: 0.25s; }
+.data-card:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,0.12); }
+.tag-pending { background: #fff7ed; color: #d97706; font-weight: 600; padding: 3px 10px; border-radius: 10px; font-size: 12px; }
+.activity-feed { max-height: 300px; overflow-y: auto; background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+.activity-feed div { padding: 10px 0; border-bottom: 1px solid #e5e7eb; }
+.activity-feed div:last-child { border-bottom: none; }
+</style>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+    <h4 class="menu-title">Admin Panel</h4>
+
+    <img src="{% if request.user.profile_pic %}{{ request.user.profile_pic.url }}{% else %}{% static 'images/default.png' %}{% endif %}">
+
+    <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+    <p>{{ user.email }}</p>
+
+    <a href="{% url 'admin_dashboard' %}" class="active">
+        <i class="bi bi-speedometer2" ></i>  Dashboard
+    </a>
+
+    <a href="{% url 'admin_users' %}">
+        <i class="bi bi-people-fill" ></i>  Users
+    </a>
+
+    <a href="{% url 'admin_recruiters' %}">
+        <i class="bi bi-building" ></i>  Recruiters
+    </a>
+
+    <a href="{% url 'admin_jobs' %}">
+        <i class="bi bi-briefcase-fill" ></i>  Job Posts
+    </a>
+
+    <a href="{% url 'admin_applicants' %}">
+        <i class="bi bi-person-lines-fill" ></i>  Manage Applicants
+    </a>
+
+    <a href="{% url 'admin_logout' %}" style="color:#f87171;">
+        <i class="bi bi-box-arrow-right" ></i>  Logout
+    </a>
+</div>
+
+
+<!-- ================= MAIN CONTENT ================= -->
+<div class="content">
+    <h2 class="fw-bold mb-4">Welcome, Admin 👋</h2>
+
+    <!-- METRIC CARDS -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3"><div class="metric-card"><h6>Total Users</h6><h2>{{ total_users }}</h2></div></div>
+        <div class="col-md-3"><div class="metric-card"><h6>Total Recruiters</h6><h2>{{ total_recruiters }}</h2></div></div>
+        <div class="col-md-3"><div class="metric-card"><h6>Total Jobs</h6><h2>{{ total_jobs }}</h2></div></div>
+        <div class="col-md-3"><div class="metric-card"><h6>Pending Applications</h6><h2>{{ pending_applications }}</h2></div></div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="metric-card">
+                <h6>Jobs per Category</h6>
+                <canvas id="jobsCategoryChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="metric-card">
+                <h6>Users Registered (Monthly)</h6>
+                <canvas id="usersTrendChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECENT ACTIVITY -->
+    <h3 class="section-title">Recent Activity</h3>
+    <div class="activity-feed mb-4">
+        {% for app in recent_activity %}
+        <div>
+            <strong>{{ app.name }}</strong> applied for <em>{{ app.job_title }}</em> at {{ app.company_name }} 
+            on {{ app.applied_on|date:"d M Y" }}
+        </div>
+        {% empty %}
+        <p>No recent activity.</p>
+        {% endfor %}
+    </div>
+
+    <!-- LATEST JOBS -->
+    <h3 class="section-title">Latest Jobs</h3>
+    <div class="data-grid mb-4">
+        {% for job in latest_jobs %}
+        <div class="data-card">
+            <h5>{{ job.job_title }}</h5>
+            <p><strong>Company:</strong> {{ job.company_name }}</p>
+            <p><strong>Posted:</strong> {{ job.posted_on|date:"d M Y" }}</p>
+        </div>
+        {% empty %}
+        <p>No jobs available.</p>
+        {% endfor %}
+    </div>
+
+    <!-- LATEST USERS -->
+    <h3 class="section-title">Latest Users</h3>
+    <div class="data-grid">
+        {% for u in latest_users %}
+        <div class="data-card">
+            <h5>{{ u.username }}</h5>
+            <p><strong>Email:</strong> {{ u.email }}</p>
+            <p><strong>Joined:</strong> {{ u.date_joined|date:"d M Y" }}</p>
+        </div>
+        {% empty %}
+        <p>No users available.</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+<!-- JSON Data -->
+{{ category_labels|json_script:"categoryLabels" }}
+{{ category_counts|json_script:"categoryCounts" }}
+{{ month_labels|json_script:"monthLabels" }}
+{{ month_counts|json_script:"monthCounts" }}
+
+<script>
+// Parse JSON safely
+const categoryLabels = JSON.parse(document.getElementById('categoryLabels').textContent);
+const categoryCounts = JSON.parse(document.getElementById('categoryCounts').textContent);
+const monthLabels = JSON.parse(document.getElementById('monthLabels').textContent);
+const monthCounts = JSON.parse(document.getElementById('monthCounts').textContent);
+
+// Jobs per category chart
+const jobsCategoryChart = new Chart(document.getElementById('jobsCategoryChart'), {
+    type: 'pie',
+    data: {
+        labels: categoryLabels,
+        datasets: [{
+            data: categoryCounts,
+            backgroundColor: ['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#f43f5e'],
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } }
+    }
+});
+
+// Users trend chart
+const usersTrendChart = new Chart(document.getElementById('usersTrendChart'), {
+    type: 'line',
+    data: {
+        labels: monthLabels,
+        datasets: [{
+            label: 'Users',
+            data: monthCounts,
+            fill: true,
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59,130,246,0.2)',
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+    }
+});
+</script>
+{% endblock %}

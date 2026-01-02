@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<style>
+    .profile-card {
+        border-radius: 18px;
+        background: #ffffff;
+        padding: 30px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    }
+
+    .profile-img-container {
+        position: relative;
+        width: 120px;
+        height: 120px;
+    }
+
+    .profile-img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 4px solid #0d6efd;
+        object-fit: cover;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .change-photo-btn {
+        position: absolute;
+        bottom: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #0d6efd;
+        color: #fff;
+        padding: 2px 12px;
+        font-size: 12px;
+        border-radius: 50px;
+        cursor: pointer;
+    }
+
+    .profile-section-title {
+        font-weight: 600;
+        color: #495057;
+        border-left: 4px solid #0d6efd;
+        padding-left: 10px;
+        margin-bottom: 15px;
+    }
+
+    .profile-table th {
+        width: 30%;
+        color: #6c757d;
+    }
+
+    .btn-edit {
+        border-radius: 30px;
+    }
+
+    .btn-blue {
+        background: #0dcaf0;
+        border: none;
+    }
+
+    .btn-blue:hover {
+        background: #0bb3d6;
+    }
+
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+
+            <!-- PROFILE CARD -->
+            <div class="profile-card">
+
+                <!-- HEADER: PHOTO + NAME -->
+                <div class="d-flex align-items-center mb-4">
+
+                    <!-- IMAGE -->
+                    <form action="{% url 'update_profile_photo' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="profile-img-container me-4">
+                            <img 
+                                src="{% if request.user.profile.photo %}{{ request.user.profile.photo.url }}{% else %}https://cdn-icons-png.flaticon.com/512/3135/3135715.png{% endif %}" 
+                                class="profile-img"
+                            >
+
+                            <input type="file" name="photo" id="photoInput" accept="image/*" hidden onchange="this.form.submit()">
+
+                            <label for="photoInput" class="change-photo-btn">
+                                Change
+                            </label>
+                        </div>
+                    </form>
+
+                    <!-- NAME & EMAIL -->
+                    <div>
+                        <h2 class="mb-1 text-primary fw-bold">{{ request.user.first_name }} {{ request.user.last_name }}</h2>
+                        <p class="text-muted mb-1">{{ request.user.email }}</p>
+                        <span class="badge bg-info">Active User</span>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <!-- PROFILE DETAILS -->
+                <h5 class="profile-section-title">Profile Information</h5>
+
+                <table class="table profile-table">
+                    <tr>
+                        <th>Username:</th>
+                        <td>{{ request.user.username }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email:</th>
+                        <td>{{ request.user.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>First Name:</th>
+                        <td>{{ request.user.first_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Last Name:</th>
+                        <td>{{ request.user.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Date Joined:</th>
+                        <td>{{ request.user.date_joined|date:"d M Y" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Last Login:</th>
+                        <td>{{ request.user.last_login|date:"d M Y, h:i A" }}</td>
+                    </tr>
+                </table>
+
+                <!-- BUTTONS -->
+                <div class="text-end mt-4">
+                    <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary btn-sm btn-edit px-4">
+                        <i class="bi bi-pencil-square"></i> Edit Profile
+                    </a>
+                    <a href="{% url 'user_dashboard' %}" class="btn btn-blue btn-sm btn-edit px-4 text-white">
+                        <i class="bi bi-house-door"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- LOGOUT -->
+            <div class="text-center mt-4">
+                <a href="{% url 'logout' %}" class="btn btn-danger px-4 rounded-pill">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

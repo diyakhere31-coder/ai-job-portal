@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="mb-4 text-center">Edit IT Job</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Job Title -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Job Title</label>
+                <input type="text" name="title" class="form-control" value="{{ job.title }}" required>
+            </div>
+
+            <!-- Category (Fixed IT) -->
+            <input type="hidden" name="category" value="IT">
+
+            <!-- Description -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Job Description</label>
+                <textarea name="description" class="form-control" rows="5" required>{{ job.description }}</textarea>
+            </div>
+
+            <!-- Skills -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Required Skills</label>
+                <input type="text" name="skills" class="form-control" value="{{ job.skills }}" required>
+            </div>
+
+            <!-- Experience -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Experience (Years)</label>
+                <input type="number" name="experience" class="form-control" value="{{ job.experience }}" required>
+            </div>
+
+            <!-- Salary -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Salary</label>
+                <input type="text" name="salary" class="form-control" value="{{ job.salary }}" required>
+            </div>
+
+            <!-- Location -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Location</label>
+                <input type="text" name="location" class="form-control" value="{{ job.location }}" required>
+            </div>
+
+            <div class="text-center mt-3">
+                <button class="btn btn-primary px-4">Update Job</button>
+                <a href="{% url 'recruiter_dashboard' %}" class="btn btn-secondary px-4 ms-2">Cancel</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% block title %}User Dashboard{% endblock %}
+
+{% block content %}
+<style>
+        /* Sidebar */
+        .sidebar {
+        min-height: 100vh;
+        background: #ffffff;
+        border-right: 1px solid #dee2e6;
+        padding: 20px 0;
+        position: sticky;
+        top: 0;
+    }
+
+    .sidebar .nav-link {
+        color: #495057;
+        font-weight: 500;
+        border-radius: 8px;
+        margin: 8px 0;
+        padding: 10px 12px;
+    }
+
+    .sidebar .nav-link:hover {
+        background: rgba(0, 123, 255, 0.1);
+    }
+
+    .sidebar .nav-link.active {
+        background-color: #007bff;
+        color: white !important;
+    }
+
+    .sidebar {
+        min-height: 100vh;
+        background: #f8f9fa;
+        border-right: 1px solid #dee2e6;
+        padding: 20px 0;
+        position: sticky;
+        top: 0;
+    }
+    .sidebar .nav-link {
+        color: #495057;
+        font-weight: 500;
+        margin: 8px 0;
+        border-radius: 8px;
+    }
+    .sidebar .nav-link.active {
+        background-color: #007bff;
+        color: white !important;
+    }
+    /* Job card */
+    .job-card { transition: all 0.3s ease; border-radius: 15px; }
+    .job-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+    .category-badge { font-size: 12px; padding: 4px 10px; border-radius: 12px; font-weight: 600; display: inline-block; margin-bottom: 6px; }
+    .badge-it { background: rgba(0,123,255,0.1); color: #007bff; }
+    .badge-mech { background: rgba(40,167,69,0.1); color: #28a745; }
+    .badge-civil { background: rgba(111,66,193,0.1); color: #6f42c1; }
+    .badge-other { background: rgba(255,193,7,0.1); color: #856404; }
+    /* Stats cards */
+    .stat-card { border-radius: 12px; padding: 15px; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
+    .stat-card h5 { margin-bottom: 10px; font-weight: 600; }
+    .stat-card p { font-size: 1.2rem; margin: 0; font-weight: 700; }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 sidebar">
+
+            <div class="text-center px-3 mb-4">
+
+                <!-- Profile Image -->
+                <img src="{{ user.profile.photo.url|default:'/static/images/default_profile.png' }}"
+                    class="rounded-circle shadow-sm"
+                    style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #007bff;">
+
+                <!-- Name -->
+                <h5 class="mt-3 mb-0 fw-bold">{{ user.first_name }} {{ user.last_name }}</h5>
+
+                <!-- Email -->
+                <p class="text-muted" style="font-size: 13px;">{{ user.email }}</p>
+
+                <!-- Profile Actions -->
+                <a href="{% url 'user_profile' %}"
+                class="btn btn-primary btn-sm rounded-pill px-3 mb-2">
+                    View Profile
+                </a>
+
+                <a href="{% url 'edit_profile' %}"
+                class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                    Edit Profile
+                </a>
+
+            </div>
+
+            <hr>
+
+            <h6 class="text-uppercase text-muted px-3" style="font-size: 11px;">Menu</h6>
+
+            <nav class="nav flex-column px-3">
+
+                <a class="nav-link active" href="{% url 'user_dashboard' %}">🏠 Dashboard</a>
+                <a class="nav-link" href="{% url 'user_applied_jobs' %}">📄 Applied Jobs</a>
+
+                <hr class="my-3">
+
+                <h6 class="text-uppercase text-muted px-2 mb-2" style="font-size: 12px;">Explore Jobs</h6>
+
+                <a class="nav-link" href="{% url 'list_of_it_jobs' %}">💻 More IT Jobs</a>
+                <a class="nav-link" href="{% url 'list_of_mech_jobs' %}">⚙️ Mechanical Jobs</a>
+                <a class="nav-link" href="{% url 'list_of_civil_jobs' %}">🏗️ Civil Jobs</a>
+                <a class="nav-link" href="{% url 'list_of_all_jobs' %}">🌐 Other Jobs</a>
+
+                <hr class="my-3">
+
+                <a class="nav-link text-danger" href="{% url 'user_logout' %}">🚪 Logout</a>
+            </nav>
+        </div>
+
+        <!-- Main content -->
+        <div class="col-md-9 col-lg-10 py-4">
+
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="stat-card bg-primary text-white">
+                        <h5>Total Applications</h5>
+                        <p>{{ total_applications|default:0 }}</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card bg-success text-white">
+                        <h5>Approved</h5>
+                        <p>{{ approved_applications|default:0 }}</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card bg-danger text-white">
+                        <h5>Rejected</h5>
+                        <p>{{ rejected_applications|default:0 }}</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card bg-warning text-dark">
+                        <h5>Pending</h5>
+                        <p>{{ pending_applications|default:0 }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Listings -->
+            <h4 class="mb-3">💼 Latest Jobs</h4>
+            <div class="row">
+                {% if jobs %}
+                    {% for job in jobs %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card job-card shadow-sm h-100">
+                                <div class="card-body">
+                                    <span class="category-badge {{ job.badge_class }}">{{ job.category }}</span>
+                                    <h5 class="{{ job.text_class }} fw-bold">{{ job.instance.job_title }}</h5>
+                                    <p><b>Company:</b> {{ job.instance.company_name }}</p>
+                                    <p><b>Location:</b> {{ job.instance.job_location|default:"N/A" }}</p>
+                                    {% if job.category != "Other" %}
+                                        <p><b>Experience:</b> {{ job.instance.experience|default:"N/A" }} yrs</p>
+                                    {% endif %}
+                                    <p><b>Salary:</b> ₹{{ job.instance.salary|default:"N/A" }}</p>
+                                    <a href="{{ job.detail_url }}" class="btn btn-outline-{{ job.text_class|slice:5|lower }} btn-sm rounded-pill">🔍 View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted ms-3">No jobs available at the moment.</p>
+                {% endif %}
+            </div>
+
+            <!-- Applied Jobs Section -->
+            <h4 class="mt-5 mb-3">📝 Your Applications</h4>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Company</th>
+                            <th>Category</th>
+                            <th>Applied On</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr>
+                            <td>{{ app.job_title }}</td>
+                            <td>{{ app.company_name }}</td>
+                            <td>{{ app.category }}</td>
+                            <td>{{ app.applied_on|date:"d M Y" }}</td>
+                            <td>
+                                {% if app.status == "Approved" %}
+                                    <span class="badge bg-success">{{ app.status }}</span>
+                                {% elif app.status == "Rejected" %}
+                                    <span class="badge bg-danger">{{ app.status }}</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">{{ app.status }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">You haven't applied to any jobs yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

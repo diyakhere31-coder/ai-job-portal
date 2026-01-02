@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% block title %}Applied Jobs{% endblock %}
+
+{% block content %}
+<style>
+    /* Sidebar styles reused */
+    .sidebar {
+        min-height: 100vh;
+        background: #f8f9fa;
+        border-right: 1px solid #dee2e6;
+        padding: 20px 0;
+        position: sticky;
+        top: 0;
+    }
+    .sidebar .nav-link {
+        color: #495057;
+        font-weight: 500;
+        margin: 8px 0;
+        border-radius: 8px;
+    }
+    .sidebar .nav-link.active {
+        background-color: #007bff;
+        color: white !important;
+    }
+
+    /* Table styles */
+    .table-hover tbody tr:hover {
+        background-color: #f1f3f5;
+    }
+    .status-badge {
+        font-weight: 500;
+        padding: 6px 12px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+    }
+    .status-approved { background: #28a745; color: white; }
+    .status-rejected { background: #dc3545; color: white; }
+    .status-pending { background: #ffc107; color: #212529; }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 sidebar">
+            <h4 class="text-primary fw-bold px-3 mb-4">JobPortal</h4>
+
+            <nav class="nav flex-column px-3">
+
+                <!-- MAIN NAVIGATION -->
+                <a class="nav-link active" href="{% url 'user_dashboard' %}">🏠 Dashboard</a>
+                <a class="nav-link" href="{% url 'user_applied_jobs' %}">📄 Applied Jobs</a>
+                <a class="nav-link" href="{% url 'user_profile' %}">👤 Profile</a>
+
+                <hr class="my-3">
+
+                <!-- EXPLORE JOBS SECTION -->
+                <h6 class="text-uppercase text-muted px-2 mb-2" style="font-size: 12px;">Explore Jobs</h6>
+
+                <a class="nav-link" href="{% url 'list_of_it_jobs' %}">💻 More IT Jobs</a>
+                <a class="nav-link" href="{% url 'list_of_mech_jobs' %}">⚙️ More Mechanical Jobs</a>
+                <a class="nav-link" href="{% url 'list_of_civil_jobs' %}">🏗️ More Civil Jobs</a>
+                <a class="nav-link" href="{% url 'list_of_all_jobs' %}">🌐 Find Other Jobs</a>
+
+                <hr class="my-3">
+
+                <!-- LOGOUT -->
+                <a class="nav-link text-danger" href="{% url 'user_logout' %}">🚪 Logout</a>
+            </nav>
+        </div>
+
+
+        <!-- Main content -->
+        <div class="col-md-9 col-lg-10 py-4">
+            <h3 class="mb-4">📝 Your Applied Jobs</h3>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Job Title</th>
+                            <th>Company</th>
+                            <th>Category</th>
+                            <th>Applied On</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if applications %}
+                            {% for app in applications %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>
+                                    <a href="{% url 'application_detail_user' app.id %}"
+                                    class="text-decoration-none fw-bold text-primary">
+                                        {{ app.job_title }}
+                                    </a>
+                                </td>
+
+                                <td>{{ app.company_name }}</td>
+                                <td>{{ app.category }}</td>
+                                <td>{{ app.applied_on|date:"d M Y" }}</td>
+
+                                <td>
+                                    {% if app.status == "Approved" %}
+                                        <span class="badge bg-success">{{ app.status }}</span>
+                                    {% elif app.status == "Rejected" %}
+                                        <span class="badge bg-danger">{{ app.status }}</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">{{ app.status }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">You haven't applied to any jobs yet.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Optional: Pagination -->
+            {% if applications.has_other_pages %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if applications.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ applications.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&laquo;</span>
+                    </li>
+                    {% endif %}
+
+                    {% for num in applications.paginator.page_range %}
+                        {% if applications.number == num %}
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                        {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if applications.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ applications.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&raquo;</span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

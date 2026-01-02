@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Recruiter Profile{% endblock %}
+
+{% block content %}
+
+<style>
+.profile-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: auto;
+}
+
+.profile-wrapper img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.upload-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #0d6efd;
+    color: white;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    font-size: 20px;
+    cursor: pointer;
+    border: 3px solid #fff;
+}
+.upload-btn:hover {
+    background: #084298;
+}
+</style>
+
+<div class="container mt-5 mb-5" style="max-width:700px;">
+
+    <div class="card shadow-lg border-0 rounded-4 p-4">
+        
+        <div class="text-center mb-4">
+
+            <!-- Profile Picture Circle with + Upload Button -->
+            <div class="profile-wrapper">
+                
+                {% if request.user.profile_pic %}
+                    <img id="preview" src="{{ request.user.profile_pic.url }}">
+                {% else %}
+                    <img id="preview" src="{% static 'images/default_profile.png' %}">
+                {% endif %}
+
+                <label class="upload-btn" for="profilePicInput">+</label>
+                <input id="profilePicInput" type="file" name="profile_pic" style="display:none;" form="profileForm" onchange="loadPreview(event)">
+            </div>
+
+            <h3 class="mt-3">{{ request.user.username }}</h3>
+            <p class="text-muted">Recruiter Profile Settings</p>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" id="profileForm">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Username</label>
+                <input type="text" name="username" class="form-control" value="{{ request.user.username }}">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Email</label>
+                <input type="email" name="email" class="form-control" value="{{ request.user.email }}">
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-primary rounded-pill px-4" type="submit">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script>
+function loadPreview(event) {
+    document.getElementById("preview").src = URL.createObjectURL(event.target.files[0]);
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {% load crispy_forms_tags %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+
+    <title>Add Civil Jobs</title>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #e6edf5, #f8fafc);
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .form-wrapper {
+            max-width: 680px;
+            margin: 70px auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .title {
+            text-align: center;
+            color: #0f3c5f;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        hr {
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-primary {
+            padding: 12px 42px;
+            font-size: 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+        }
+
+        .back-btn {
+            font-size: 14px;
+            border-radius: 50px;
+            padding: 8px 22px;
+        }
+
+        .back-btn:hover {
+            background: #475569;
+        }
+
+        /* Improve crispy form look */
+        .form-control {
+            border-radius: 12px;
+            padding: 10px 14px;
+            border: 1px solid #dbe2ea;
+        }
+
+        .form-control:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        label {
+            font-weight: 600;
+            color: #334155;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="form-wrapper">
+
+        <h2 class="title">🏗️ Add New Civil Job</h2>
+        <p class="subtitle">Fill the job details carefully for better candidate matching</p>
+        <hr>
+
+        <a href="{% url 'recruiter_dashboard' %}" class="btn btn-secondary back-btn mb-4">
+            ⬅ Back to Dashboard
+        </a>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">
+                    ➕ Add Job
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>

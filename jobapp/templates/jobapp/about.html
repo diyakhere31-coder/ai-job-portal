@@ -1,0 +1,302 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | JobPortal</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            overflow-x: hidden;
+        }
+
+        /* NAVBAR */
+        .navbar-custom {
+            background: linear-gradient(90deg, #0d1b2a, #1b263b);
+            padding: 10px 0;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            color: #ffd60a !important;
+        }
+        .nav-link {
+            color: #e0e0e0 !important;
+            font-weight: 500;
+        }
+        .nav-link:hover {
+            color: #ffd60a !important;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            position: relative;
+            background: linear-gradient(rgba(13,27,42,0.75), rgba(13,27,42,0.75)),
+                        url('https://cdn.pixabay.com/photo/2017/08/10/03/30/business-2617334_1280.jpg') center/cover no-repeat;
+            color: white;
+            text-align: center;
+            padding: 90px 0;
+            background-attachment: fixed;
+            animation: fadeIn 1s ease-out;
+        }
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+        }
+
+        /* SECTIONS – compact modern spacing */
+        .content-section {
+            padding: 50px 0; /* reduced spacing */
+        }
+
+        .content-section h2 {
+            font-weight: 700;
+            color: #1b263b;
+            margin-bottom: 25px;
+        }
+
+        /* ABOUT IMAGE */
+        .about-img {
+            border-radius: 14px;
+            animation: fadeIn 1.3s ease-in;
+        }
+
+        /* ABOUT TEXT */
+        .about-text {
+            animation: fadeInUp 1s ease-out;
+            line-height: 1.7;
+            font-size: 15.5px;
+        }
+
+        /* Feature & Values Cards */
+        .icon-box {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
+        .icon-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        }
+        .icon-box i {
+            font-size: 2.5rem;
+            color: #ffd60a;
+            margin-bottom: 12px;
+        }
+        .icon-box h5 {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1b263b;
+        }
+        .icon-box p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* VISION IMG */
+        .vision-img {
+            border-radius: 14px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">JobPortal</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'about' %}">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container text-center">
+            <h1>About JobPortal</h1>
+            <p class="lead">Connecting talent with opportunity — one click at a time.</p>
+        </div>
+    </section>
+
+    <!-- WHO WE ARE -->
+    <section class="content-section container py-4">
+        <div class="row align-items-center mb-5">
+            <div class="col-md-6">
+                <img src="https://i.pinimg.com/736x/6a/7a/15/6a7a150b675aeb0ed2b1995aa74ceb25.jpg" 
+                    class="img-fluid shadow about-img">
+            </div>
+
+            <div class="col-md-6 about-text">
+                <h2>Who We Are</h2>
+
+                <p>
+                    JobPortal is an innovative platform designed to bridge the gap between employers and job seekers.
+                    Our mission is to simplify the hiring process and help professionals find meaningful careers across
+                    IT, Mechanical, Civil, and other sectors. With a user-friendly interface and advanced hiring tools,
+                    we aim to make job searching effortless and efficient.
+                </p>
+
+                <p>
+                    At JobPortal, we combine technology with trust. Our platform ensures secure listings,
+                    verified employers, and genuine opportunities for every applicant. Whether you're a fresher
+                    entering the workforce or an experienced professional seeking career growth, we provide tools
+                    and insights tailored to help you succeed.
+                </p>
+
+                <p>
+                    We work tirelessly to create an environment where talent meets opportunity. With transparent
+                    processes, smart job matching, and real-time updates, JobPortal strives to redefine the
+                    recruitment experience — making it faster, smarter, and more reliable for everyone.
+                </p>
+
+                <p>
+                    Our vision is simple: to become the most trusted and impactful job platform where careers grow,
+                    companies thrive, and every connection leads to a brighter future.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- MAIN FEATURES -->
+    <section class="content-section container py-4">
+        <h2 class="text-center mb-5">What We Offer</h2>
+
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="icon-box">
+                    <i class="bi bi-briefcase-fill"></i>
+                    <h5>Trusted by Employers</h5>
+                    <p>Thousands of verified companies rely on us to find qualified talent.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="icon-box">
+                    <i class="bi bi-person-check-fill"></i>
+                    <h5>For Job Seekers</h5>
+                    <p>Find curated job listings from top companies in multiple industries.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="icon-box">
+                    <i class="bi bi-lightbulb-fill"></i>
+                    <h5>Smart Matching</h5>
+                    <p>AI-powered job recommendations personalized for your skills.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ADDITIONAL FEATURES -->
+    <section class="content-section container py-4">
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="icon-box">
+                    <i class="bi bi-globe-americas"></i>
+                    <h5>Multi-Industry Support</h5>
+                    <p>Jobs across IT, Civil, Mechanical, HR, Finance, and more.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="icon-box">
+                    <i class="bi bi-shield-lock-fill"></i>
+                    <h5>Secure & Verified</h5>
+                    <p>Data encryption and verified employers ensure a safe experience.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="icon-box">
+                    <i class="bi bi-speedometer2"></i>
+                    <h5>Fast Hiring</h5>
+                    <p>Smart filters and instant applications reduce hiring time.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CORE VALUES -->
+    <section class="content-section container py-4">
+        <h2 class="text-center mb-4">Our Core Values</h2>
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="icon-box">
+                    <i class="bi bi-heart-fill"></i>
+                    <h5>Commitment</h5>
+                    <p>We are dedicated to helping job seekers build meaningful careers.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="icon-box">
+                    <i class="bi bi-people-fill"></i>
+                    <h5>Community First</h5>
+                    <p>Creating a strong ecosystem of job seekers & recruiters.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="icon-box">
+                    <i class="bi bi-bar-chart-fill"></i>
+                    <h5>Growth</h5>
+                    <p>We help individuals and companies grow together.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VISION & MISSION -->
+    <section class="content-section container py-4">
+        <div class="row align-items-center mt-4">
+            <div class="col-md-6 about-text">
+                <h2>Our Vision</h2>
+                <p>To become India’s most trusted job platform connecting millions of talents with opportunities.</p>
+
+                <h2 class="mt-4">Our Mission</h2>
+                <p>To simplify job searching, empower recruiters, and make hiring seamless through innovation.</p>
+            </div>
+
+            <div class="col-md-6">
+                <img src="https://we-are-hr.com/wp-content/uploads/2022/03/mission-and-vision.png"
+                    class="img-fluid shadow about-img">
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="row text-center">
+        <p>© 2025 JobPortal. All Rights Reserved | Built with ❤️ using Django</p>
+    </footer>
+
+</body>
+
+</html>

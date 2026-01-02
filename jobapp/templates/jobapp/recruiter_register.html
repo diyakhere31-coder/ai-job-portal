@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Register</title>
+
+    <!-- Lottie Script -->
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #94a4bc, #9bbbc8);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .register-wrapper {
+            display: flex;
+            background: #fff;
+            width: 950px;
+            max-width: 95%;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.22);
+        }
+
+        .left {
+            width: 50%;
+            background: #f7fbff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 25px;
+            text-align: center;
+        }
+
+        dotlottie-wc {
+            width: 100%;
+            max-width: 330px;
+            height: 300px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0056d6;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+
+        .welcome-text {
+            font-size: 14px;
+            color: #444;
+            max-width: 80%;
+            line-height: 1.6;
+        }
+
+        .right {
+            width: 50%;
+            padding: 40px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h3 {
+            text-align: center;
+            color: #0056d6;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .form-control {
+            width: 100%;
+            height: 46px;
+            border-radius: 12px;
+            border: 1px solid #cfcfcf;
+            padding-left: 12px;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: #0066ff;
+            border: none;
+            color: #fff;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: #004ecc;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        @media(max-width: 768px) {
+            .register-wrapper {
+                flex-direction: column;
+            }
+            .left, .right {
+                width: 100%;
+            }
+            dotlottie-wc {
+                max-width: 250px;
+                height: 240px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="register-wrapper">
+
+    <!-- Left Animation + Welcome -->
+    <div class="left">
+
+        <dotlottie-wc 
+            src="https://lottie.host/06bd3718-182f-4a5a-8353-956d0501ff5c/c7o2aCxKb4.lottie"
+            autoplay 
+            loop>
+        </dotlottie-wc>
+
+        <h2>Welcome to Job Portal</h2>
+
+        <div class="welcome-text">
+            A professional platform created to connect companies with talented job seekers. 
+            Register as a recruiter to post jobs, track applicants, and build your workforce effortlessly.
+        </div>
+    </div>
+
+    <!-- Right Registration Form -->
+    <div class="right">
+
+        <h3>Recruiter Registration</h3>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <input type="text" name="username" class="form-control" placeholder="Username" required>
+            <input type="email" name="email" class="form-control" placeholder="Email" required>
+            <input type="password" name="password" class="form-control" placeholder="Password" required>
+
+            <button type="submit" class="btn-primary">Register</button>
+        </form>
+
+        <p>
+            Already have an account?
+            <a href="{% url 'recruiter_login' %}" class="fw-bold text-primary">Login</a>
+        </p>
+
+    </div>
+</div>
+
+</body>
+</html>

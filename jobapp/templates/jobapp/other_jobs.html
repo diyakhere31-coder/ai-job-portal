@@ -1,0 +1,41 @@
+{% extends 'jobapp/base.html' %}
+{% load static %}
+{% block title %}Other Jobs{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Other Jobs</h2>
+
+    {% if jobs %}
+        <div class="row">
+            {% for job in jobs %}
+                <div class="col-md-12 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ job.job_title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ job.company_name }} - {{ job.job_location }}</h6>
+                            <p class="card-text">
+                                Salary: {{ job.salary }} <br>
+                                {% if user.is_authenticated %}
+                                    Description: {{ job.description|truncatewords:30 }}
+                                {% else %}
+                                    Description: Login to view full job description
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if not user.is_authenticated %}
+            <div class="alert alert-info mt-3">
+                <a href="{% url 'user_login' %}">Login</a> for more jobs and to see full job description.
+            </div>
+        {% endif %}
+        
+    {% else %}
+        <p>No jobs found.</p>
+    {% endif %}
+</div>
+{% endblock %}

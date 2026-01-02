@@ -1,0 +1,62 @@
+/* Fullscreen body with background */
+.continer {
+    margin-top: 150px
+}
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: url('https://www.sapphiresolutions.net/images/job_new_portfolio/job_portal_about.svg') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Glassmorphic card */
+.glass-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 50px 40px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    max-width: 500px;
+    width: 90%;
+}
+
+/* Heading style */
+.glass-card h1 {
+    color: #00ff88;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+/* Paragraphs */
+.glass-card p {
+    font-size: 1.1rem;
+    color: #e0e0e0;
+}
+
+/* Buttons */
+.glass-card a.btn {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+/* Links */
+.glass-card a {
+    color: #00acee;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.glass-card a:hover {
+    text-decoration: underline;
+}

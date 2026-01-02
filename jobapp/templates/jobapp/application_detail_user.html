@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Application Details{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+
+    <a href="{% url 'user_applied_jobs' %}" class="btn btn-secondary mb-3">
+        ⬅ Back to Applied Jobs
+    </a>
+    
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">{{ application.job_title }} — {{ application.company_name }}</h4>
+        </div>
+
+        <div class="card-body">
+            <p><strong>Location:</strong> {{ application.job_location }}</p>
+            <!-- <p><strong>Experience Required:</strong> {{ application.experience }} years</p> -->
+            <p><strong>Salary:</strong> ₹{{ application.salary }} per month</p>
+            <p><strong>Applied On:</strong> {{ application.applied_on|date:"d M Y" }}</p>
+            <hr>
+
+            <h5>🤖 AI Match Result</h5>
+            <p><strong>Match Score:</strong>
+                <span class="badge bg-info text-dark">
+                    {{ application.ai_score }} %
+                </span>
+            </p>
+
+            <p><strong>Status:</strong>
+                <span class="badge bg-warning text-dark">
+                    {{ application.status }}
+                </span>
+            </p>
+
+            <div class="alert alert-info">
+                <strong>AI Feedback:</strong><br>
+
+                {% if application.ai_feedback %}
+                    {{ application.ai_feedback }}
+                {% else %}
+                    AI analysis completed, but no detailed feedback generated.
+                {% endif %}
+            </div>
+            {% if application.matched_skills %}
+            <div class="alert alert-success">
+                <strong>Matched Skills:</strong><br>
+                {{ application.matched_skills }}
+            </div>
+            {% endif %}
+
+            {% if application.required_skills_snapshot %}
+            <div class="alert alert-warning">
+                <strong>Job Required Skills:</strong><br>
+                {{ application.required_skills_snapshot }}
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

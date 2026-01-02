@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% block title %}Add Job (All Fields){% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #eef2ff, #f8fafc);
+    }
+
+    .job-card {
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    .job-card-header {
+        background: linear-gradient(135deg, #2563eb, #1e40af);
+        padding: 22px;
+    }
+
+    .job-card-header h3 {
+        font-weight: 700;
+        letter-spacing: 0.3px;
+    }
+
+    .form-label {
+        font-size: 0.9rem;
+        color: #334155;
+    }
+
+    .form-control,
+    textarea {
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        padding: 12px 14px;
+        transition: all 0.2s ease;
+        background-color: #f8fafc;
+    }
+
+    .form-control:focus,
+    textarea:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        background-color: #fff;
+    }
+
+    textarea {
+        resize: none;
+    }
+
+    .skill-box textarea {
+        background: #f1f5f9;
+        font-family: monospace;
+        font-size: 0.9rem;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #16a34a, #15803d);
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(22, 163, 74, 0.3);
+    }
+
+    .btn-secondary {
+        border-radius: 50px;
+        background: #64748b;
+        border: none;
+        font-weight: 500;
+    }
+
+    .btn-secondary:hover {
+        background: #475569;
+    }
+
+    .hint-text {
+        font-size: 0.8rem;
+        color: #64748b;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="card job-card border-0">
+        <div class="job-card-header text-white text-center">
+            <h3 class="mb-0">🌐 Post a New Job</h3>
+            <small class="opacity-75">Fill all details carefully for better AI matching</small>
+        </div>
+
+        <div class="card-body p-4">
+            <form method="POST">
+                {% csrf_token %}
+
+                <!-- Job title & company -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Job Title</label>
+                        <input type="text" name="job_title" class="form-control"
+                               placeholder="e.g. Python Developer" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Company Name</label>
+                        <input type="text" name="company_name" class="form-control"
+                               placeholder="e.g. Infosys" required>
+                    </div>
+                </div>
+
+                <!-- Category & location -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Category / Field</label>
+                        <input type="text" name="job_category" class="form-control"
+                               placeholder="IT, Mechanical, Civil, HR" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Location</label>
+                        <input type="text" name="job_location" class="form-control"
+                               placeholder="Bangalore / Remote" required>
+                    </div>
+                </div>
+
+                <!-- Salary & description -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Salary (₹ / Year)</label>
+                        <input type="text" name="salary" class="form-control"
+                               placeholder="₹4,00,000 - ₹8,00,000" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Job Description</label>
+                        <textarea name="description" class="form-control" rows="3"
+                                  placeholder="Describe responsibilities, experience, benefits..." required></textarea>
+                    </div>
+                </div>
+
+                <!-- Required Skills -->
+                <div class="mb-4 skill-box">
+                    <label class="form-label fw-semibold">Required Skills</label>
+                    <textarea name="required_skills" class="form-control" rows="3"
+                              placeholder="Python, Django, REST APIs, PostgreSQL, React"
+                              required></textarea>
+                    <div class="hint-text mt-1">
+                        Separate skills with commas — improves AI matching accuracy
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success btn-lg px-5">
+                        ➕ Post Job
+                    </button>
+                    <a href="{% url 'recruiter_dashboard' %}"
+                       class="btn btn-secondary btn-lg px-5 ms-2">
+                        ⬅ Back to Dashboard
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

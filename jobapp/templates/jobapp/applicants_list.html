@@ -1,0 +1,305 @@
+{% extends 'jobapp/base.html' %}
+{% block title %}Recruiter - Applicants{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: #f4f7fb;
+    }
+
+    /* Page header */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .page-header h2 {
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    /* Glass cards */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(8px);
+        border-radius: 16px;
+        border: 1px solid rgba(226, 232, 240, 0.7);
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+    }
+
+    /* Filter inputs */
+    .form-control,
+    .form-select {
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+    }
+
+    /* Table */
+    table {
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+
+    thead th {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: #64748b;
+        border: none;
+    }
+
+    tbody tr {
+        background: #fff;
+        border-radius: 14px;
+        transition: all .2s ease;
+    }
+
+    tbody tr:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(15,23,42,.08);
+    }
+
+    tbody td {
+        border: none;
+        padding: 14px;
+        vertical-align: middle;
+    }
+
+    /* Clickable */
+    .clickable-row {
+        cursor: pointer;
+    }
+
+    /* Applicant avatar */
+    .avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    /* Status pill */
+    .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+    }
+
+    /* AI progress */
+    .progress {
+        height: 6px;
+        border-radius: 999px;
+        background: #e5e7eb;
+    }
+
+    .progress-bar {
+        border-radius: 999px;
+    }
+
+    /* Buttons */
+    .btn-sm {
+        border-radius: 10px;
+        font-size: 0.75rem;
+    }
+    .progress {
+    height: 6px;
+    border-radius: 999px;
+    background-color: #e5e7eb;
+    }
+
+    .progress-bar {
+        border-radius: 999px;
+        transition: width 0.4s ease;
+    }
+
+    /* AI Match Colors */
+    .progress-bar.ai-high {
+        background-color: #22c55e; /* Green */
+    }
+
+    .progress-bar.ai-moderate {
+        background-color: #facc15; /* Yellow */
+    }
+
+    .progress-bar.ai-low {
+        background-color: #ef4444; /* Red */
+    }
+
+</style>
+
+<div class="container-fluid py-4">
+
+    <div class="page-header">
+        <div>
+            <h2>Job Applications</h2>
+            <p class="text-muted mb-0">Manage and evaluate applicants efficiently</p>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="glass-card p-4 mb-4">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label text-muted">Search</label>
+                <input type="text" name="q" class="form-control"
+                       placeholder="Applicant or job title"
+                       value="{{ request.GET.q }}">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label text-muted">Job Type</label>
+                <select name="job_type" class="form-select">
+                    <option value="">All Types</option>
+                    <option value="IT" {% if request.GET.job_type == 'IT' %}selected{% endif %}>IT</option>
+                    <option value="Mechanical" {% if request.GET.job_type == 'Mechanical' %}selected{% endif %}>Mechanical</option>
+                    <option value="Civil" {% if request.GET.job_type == 'Civil' %}selected{% endif %}>Civil</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100">
+                    Filter
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Table -->
+    <div class="glass-card p-3">
+        {% if applicants %}
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Applicant</th>
+                        <th>Job</th>
+                        <th>Category</th>
+                        <th>Date</th>
+                        <th>Resume</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                        <th>AI Match</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for app in applicants %}
+                <tr class="clickable-row"
+                    data-href="{% url 'application_detail' app.id %}">
+
+                    <td>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="avatar">
+                                {{ app.name|slice:":1"|upper }}
+                            </div>
+                            <div>
+                                <div class="fw-semibold">{{ app.name }}</div>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>{{ app.job_title }}</td>
+                    <td>{{ app.category }}</td>
+                    <td>{{ app.applied_on|date:"d M Y" }}</td>
+
+                    <td>
+                        {% if app.resume %}
+                            <a href="{{ app.resume.url }}"
+                               onclick="event.stopPropagation();"
+                               class="btn btn-outline-primary btn-sm">View</a>
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if app.status == 'Pending' %}
+                            <span class="status-pill bg-warning-subtle text-warning">
+                                <span class="dot bg-warning"></span> Pending
+                            </span>
+                        {% elif app.status == 'Approved' %}
+                            <span class="status-pill bg-success-subtle text-success">
+                                <span class="dot bg-success"></span> Approved
+                            </span>
+                        {% else %}
+                            <span class="status-pill bg-danger-subtle text-danger">
+                                <span class="dot bg-danger"></span> Rejected
+                            </span>
+                        {% endif %}
+                    </td>
+
+                    <td onclick="event.stopPropagation();">
+                        {% if app.status != 'Approved' %}
+                            <a href="{% url 'approve_application' app.id %}"
+                               class="btn btn-success btn-sm">Approve</a>
+                        {% endif %}
+                        {% if app.status != 'Rejected' %}
+                            <a href="{% url 'reject_application' app.id %}"
+                               class="btn btn-danger btn-sm">Reject</a>
+                        {% endif %}
+                        {% if app.status == 'Rejected' %}
+                            <a href="{% url 'delete_application' app.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if app.ai_score > 0 %}
+                            <div class="mb-1 fw-semibold small">
+                                {{ app.ai_score|floatformat:0 }}% {{ app.ai_label }}
+                            </div>
+
+                            <div class="progress">
+                                <div class="progress-bar ai-{{ app.ai_label|lower }}"
+                                    data-score="{{ app.ai_score }}"></div>
+                            </div>
+                        {% else %}
+                            <span class="badge bg-secondary">Not Scored</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <p class="text-center text-muted py-4">No applicants found</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".clickable-row").forEach(row => {
+        row.addEventListener("click", function () {
+            window.location = this.dataset.href;
+        });
+    });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.progress-bar').forEach(bar => {
+        bar.style.width = bar.dataset.score + '%';
+    });
+});
+</script>
+
+{% endblock %}

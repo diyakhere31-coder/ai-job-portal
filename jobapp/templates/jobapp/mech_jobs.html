@@ -1,0 +1,124 @@
+{% extends 'jobapp/base.html' %}
+{% load static %}
+{% block title %}Mechanical Jobs{% endblock %}
+
+{% block content %}
+
+<style>
+    .job-card {
+        border-radius: 16px;
+        padding: 25px;
+        background: #ffffff;
+        border: 1px solid #e0e6ed;
+        transition: 0.3s ease;
+    }
+
+    .job-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+    }
+
+    .job-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1e293b;
+    }
+
+    .company {
+        font-size: 15px;
+        font-weight: 600;
+        color: #475569;
+    }
+
+    .job-meta i {
+        color: #3b82f6;
+        margin-right: 5px;
+    }
+
+    .salary-tag {
+        display: inline-block;
+        background: #fff7ed;
+        color: #c2410c;
+        padding: 6px 12px;
+        font-size: 13px;
+        border-radius: 8px;
+        font-weight: 600;
+        margin-right: 8px;
+    }
+
+    .location-tag {
+        display: inline-block;
+        background: #f0fdf4;
+        color: #15803d;
+        padding: 6px 12px;
+        font-size: 13px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .job-description {
+        margin-top: 12px;
+        font-size: 14px;
+        color: #475569;
+    }
+
+    .login-alert {
+        background: #e8f0fe;
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 20px;
+        text-align: center;
+        border-left: 4px solid #3b82f6;
+    }
+</style>
+
+<div class="container mt-4 mb-4">
+
+    <h2 class="mb-4 fw-bold text-primary">Mechanical Jobs</h2>
+
+    {% if jobs %}
+        <div class="row">
+            {% for job in jobs %}
+            <div class="col-md-6 mb-4">
+                <div class="job-card">
+
+                    <h5 class="job-title">{{ job.job_title }}</h5>
+                    <p class="company">{{ job.company_name }}</p>
+
+                    <div class="job-meta mb-2">
+                        <span class="salary-tag">
+                            🔧 Salary: {{ job.salary }}
+                        </span>
+                        <span class="location-tag">
+                            📍 {{ job.job_location }}
+                        </span>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        <p class="job-description">
+                            {{ job.job_description|truncatewords:25 }}
+                        </p>
+                    {% else %}
+                        <p class="job-description">
+                            Login to view full job description.
+                        </p>
+                    {% endif %}
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if not user.is_authenticated %}
+        <div class="login-alert">
+            <a href="{% url 'user_login' %}" class="fw-bold text-primary">Login</a> 
+            to see more jobs and full job descriptions.
+        </div>
+        {% endif %}
+
+    {% else %}
+        <p>No jobs found.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

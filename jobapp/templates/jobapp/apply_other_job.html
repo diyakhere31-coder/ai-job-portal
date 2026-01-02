@@ -1,0 +1,51 @@
+{% extends 'jobapp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5" style="max-width: 700px;">
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-5">
+            <h2 class="card-title mb-3 text-primary">Apply for <strong>{{ job.job_title }}</strong></h2>
+            <h5 class="card-subtitle mb-4 text-muted">{{ job.company_name }}</h5>
+            <p class="mb-4"><i class="bi bi-geo-alt-fill"></i> {{ job.job_location }} &nbsp;|&nbsp; 
+                <i class="bi bi-currency-dollar"></i> {{ job.salary }}</p>
+
+            <form method="POST" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="full_name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter your full name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Contact Number</label>
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter your contact number" required>
+                </div>
+                <div class="mb-3">
+                    <label for="qualification" class="form-label">Qualification</label>
+                    <input type="text" class="form-control" id="qualification" name="qualification" placeholder="Your highest qualification" required>
+                </div>
+                <div class="mb-4">
+                    <label for="resume" class="form-label">Upload Resume</label>
+                    <input type="file" class="form-control" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
+                    <div class="form-text">Accepted formats: PDF, DOC, DOCX. Max size 5MB.</div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2">Submit Application</button>
+            </form>
+             <!-- Display messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

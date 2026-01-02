@@ -1,0 +1,312 @@
+<!-- Premium Recruiter Dashboard with Sidebar Navigation -->
+
+{% extends 'jobapp/base.html' %}
+
+{% load static %}
+{% block title %}Recruiter Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: #f4f6f9;
+    }
+    /* Sidebar */
+    .sidebar {
+        width: 260px;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: #ffffff;
+        border-right: 1px solid #e4e4e4;
+        padding: 20px 0;
+        overflow-y: auto;
+    }
+    .sidebar .profile-pic {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #0d6efd;
+    }
+    .sidebar a {
+        display: block;
+        padding: 12px 25px;
+        font-size: 16px;
+        color: #333;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+    .sidebar a:hover, .sidebar a.active {
+        background: #eef3ff;
+        color: #0d6efd;
+        font-weight: 600;
+    }
+
+    /* Main Content */
+    .main-content {
+        margin-left: 280px;
+        padding: 40px;
+    }
+
+    .analytics-card {
+        border-radius: 18px;
+        padding: 25px;
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .gradient-blue { background: linear-gradient(135deg, #0d6efd, #4a7dfc); }
+    .gradient-orange { background: linear-gradient(135deg, #ffa726, #fb8c00); }
+    .gradient-green { background: linear-gradient(135deg, #4caf50, #43a047); }
+</style>
+
+<div class="sidebar shadow-sm">
+    <div class="text-center mb-4">
+        {% if request.user.profile_pic %}
+            <img src="{{ request.user.profile_pic.url }}" class="rounded-circle" width="160" height="180">
+        {% else %}
+            <img src="{% static 'images/default_profile.png' %}" class="rounded-circle" width="45" height="45">
+        {% endif %}
+        <h5 class="fw-bold mt-2">{{ request.user.username }}</h5>
+        <p class="text-muted small">Recruiter</p>
+    </div>
+
+    <a href="#" class="active">📊 Dashboard</a>
+    <a href="{% url 'recruiter_profile' %}">👤 Profile Settings</a>
+    <a href="{% url 'applicants_list' %}">📨 Applicants List</a>
+    <a href="{% url 'recruiter_manage_jobs' %}">📁 Manage Posted Jobs</a>
+
+    <!-- ⭐ ADDED OPTIONS (HASHTAG LINKS) ⭐ -->
+    <hr>
+
+    <a href="{% url 'create_it_jobs' %}">💻 Add IT Job</a>
+    <a href="{% url 'create_mechanical_jobs' %}">🏗️ Add Mechanical Job</a>
+    <a href="{% url 'create_civil_jobs' %}">⚙️ Add Civil Job</a>
+    <a href="{% url 'create_all_jobs' %}">🗂️ Add Other Job</a>
+
+    <hr>
+
+    <a href="{% url 'recruiter_logout' %}" class="text-danger">🚪 Logout</a>
+</div>
+
+
+<div class="main-content">
+    <!-- Welcome Section -->
+    <h2 class="fw-bold mb-2" style="color:#0d6efd;">Welcome, {{ request.user.username }} 👋</h2>
+    <p class="text-muted mb-4">Your premium hiring control panel.</p>
+
+    <!-- Analytics Cards -->
+    <div class="row g-4 mb-5">
+
+        <!-- Total Jobs Posted -->
+        <div class="col-md-3">
+            <div class="analytics-card gradient-blue text-center">
+                <h6 class="text-uppercase small">Total Jobs</h6>
+                <h1 class="fw-bold">{{ jobs|length }}</h1>
+            </div>
+        </div>
+
+        <!-- Total Applicants -->
+        <div class="col-md-3">
+            <div class="analytics-card gradient-orange text-center">
+                <h6 class="text-uppercase small">Total Applicants</h6>
+                <h1 class="fw-bold">{{ total_applicants }}</h1>
+            </div>
+        </div>
+
+        <!-- Approved Applicants -->
+        <div class="col-md-3">
+            <div class="analytics-card gradient-green text-center">
+                <h6 class="text-uppercase small">Approved</h6>
+                <h1 class="fw-bold">{{ approved_applicants }}</h1>
+            </div>
+        </div>
+
+        <!-- Rejected Applicants -->
+        <div class="col-md-3">
+            <div class="analytics-card" style="background: linear-gradient(135deg,#ff5252,#d32f2f);">
+                <h6 class="text-uppercase small">Rejected</h6>
+                <h1 class="fw-bold">{{ rejected_applicants }}</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="analytics-card" style="background: linear-gradient(135deg,#6a11cb,#2575fc);">
+            <h6 class="text-uppercase small">Avg AI Match</h6>
+            <h1 class="fw-bold">{{ avg_ai_score }}%</h1>
+            <small class="opacity-75">{{ high_match_count }} high matches</small>
+        </div>
+    </div><br>
+    <!-- Charts Area -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card shadow p-3 rounded-4">
+                <h5 class="fw-semibold mb-3">Applications Per Category</h5>
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow p-3 rounded-4">
+                <h5 class="fw-semibold mb-3">Application Status Overview</h5>
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+        <!-- Posted Jobs Table -->
+    <div class="card shadow-lg border-0 rounded-4 mb-5">
+    <div class="card-header bg-dark text-white rounded-top-4 py-3">
+        <h4 class="fw-semibold mb-0">My Posted Jobs</h4>
+    </div>
+
+    <div class="card-body">
+
+        {% if jobs %}
+            <div class="row gy-4">
+
+                {% for job in jobs %}
+                <div class="col-md-6">
+                    <div class="job-card p-4 shadow-sm rounded-4 border">
+
+                        <div class="d-flex justify-content-between">
+                            <h5 class="fw-bold text-primary">{{ job.job_title }}</h5>
+
+                            {% if job.job_category %}
+                                <span class="badge bg-secondary px-3 py-2 rounded-pill">{{ job.job_category }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary px-3 py-2 rounded-pill">{{ job.category_name }}</span>
+                            {% endif %}
+                        </div>
+
+                        <p class="text-muted mb-1">
+                            <strong>Company:</strong> {{ job.company_name }}
+                        </p>
+
+                        <p class="text-muted mb-1">
+                            <strong>Location:</strong> 📍 {{ job.job_location }}
+                        </p>
+
+                        <p class="text-muted mb-1">
+                            <strong>Salary:</strong> 💰 ₹{{ job.salary }}
+                        </p>
+
+                        <p class="text-muted mb-3">
+                            <strong>Posted:</strong> 🗓 {{ job.posted_on|date:"d M Y" }}
+                        </p>
+                        <p class="text-muted mb-2">
+                            <strong>AI Insight:</strong>
+                            <span class="badge bg-success">Smart Screening Enabled</span>
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            {% if job.job_category == "IT" %}
+                                <a href="{% url 'edit_it_job' job.id %}" class="btn btn-outline-warning btn-sm px-4">✏️ Edit</a>
+
+                            {% elif job.job_category == "Mechanical" %}
+                                <a href="{% url 'edit_mech_job' job.id %}" class="btn btn-outline-warning btn-sm px-4">✏️ Edit</a>
+
+                            {% elif job.job_category == "Civil" %}
+                                <a href="{% url 'edit_civil_job' job.id %}" class="btn btn-outline-warning btn-sm px-4">✏️ Edit</a>
+
+                            {% else %}
+                                <a href="{% url 'edit_job' job.id %}" class="btn btn-outline-warning btn-sm px-4">✏️ Edit</a>
+                            {% endif %}
+
+                            <a href="{% url 'delete_job' job.id %}" 
+                               onclick="return confirm('Are you sure you want to delete this job?')"
+                               class="btn btn-outline-danger btn-sm px-4">
+                               🗑️ Delete
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+            <p class="text-muted text-center">No jobs posted yet.</p>
+        {% endif %}
+
+        </div>
+    </div>
+    <style>
+        .job-card {
+            transition: 0.3s ease;
+            background: #ffffff;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        }
+    </style>
+</div>
+<script id="categoryLabels" type="application/json">
+    {{ category_labels|safe }}
+</script>
+
+<script id="categoryCounts" type="application/json">
+    {{ category_counts|safe }}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    /** ----------- STATUS CHART (Already OK) ------------ **/
+    const totalApplicants = Number("{{ total_applicants|default:0 }}");
+    const approvedApplicants = Number("{{ approved_applicants|default:0 }}");
+    const rejectedApplicants = Number("{{ rejected_applicants|default:0 }}");
+
+    new Chart(document.getElementById("statusChart"), {
+        type: "doughnut",
+        data: {
+            labels: ["Total Applicants", "Approved", "Rejected"],
+            datasets: [{
+                data: [totalApplicants, approvedApplicants, rejectedApplicants],
+                backgroundColor: [
+                    "rgba(54,162,235,0.7)",
+                    "rgba(75,192,192,0.7)",
+                    "rgba(255,99,132,0.7)"
+                ]
+            }]
+        }
+    });
+
+
+    /* ------------ CATEGORY CHART ------------ */
+    const categoryLabels = JSON.parse(
+        document.getElementById("categoryLabels").textContent
+    );
+
+    const categoryCounts = JSON.parse(
+        document.getElementById("categoryCounts").textContent
+    );
+
+    new Chart(document.getElementById("categoryChart"), {
+        type: "doughnut",
+        data: {
+            labels: categoryLabels,
+            datasets: [{
+                data: categoryCounts,
+                backgroundColor: [
+                    "rgba(54,162,235,0.7)",
+                    "rgba(255,159,64,0.7)",
+                    "rgba(75,192,192,0.7)",
+                    "rgba(155, 89, 182, 0.8)",
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: "bottom" }
+            }
+        }
+    });
+
+});
+</script>
+
+{% endblock %}

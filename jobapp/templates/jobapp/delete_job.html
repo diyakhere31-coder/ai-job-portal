@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Delete Job{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg border-danger">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0">🗑️ Delete Job</h4>
+        </div>
+        <div class="card-body text-center">
+            <p class="lead mb-4">
+                Are you sure you want to delete the job <strong>"{{ job.title }}"</strong> at <strong>{{ job.company_name }}</strong>?
+            </p>
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger px-4">Yes, Delete</button>
+                <a href="{% url 'recruiter_dashboard' %}" class="btn btn-secondary ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
