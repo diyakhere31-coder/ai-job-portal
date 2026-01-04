@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from jobapp.forms import (
     CreateItJobsForm, UpdateItJobsForm,
-    CreateMechanicalJobForm, CreateCivilJobsForm
+    CreateMechanicalJobForm, UpdateMechanicalJobsForm, CreateCivilJobsForm, UpdateCivilJobsForm
     
 )
 
@@ -701,7 +701,9 @@ def user_logout(request):
 def create_it_jobs(request):
     form = CreateItJobsForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
-        form.save()
+        job = form.save(commit=False)
+        job.recruiter = request.user   
+        job.save()
         return redirect('recruiter_manage_jobs')
     return render(request, 'jobapp/create-it.html', {'form': form})
 #==============================================================================================================
@@ -742,7 +744,9 @@ def delete_it_job(request, job_id):
 def create_mechanical_jobs(request):
     form = CreateMechanicalJobForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
-        form.save()
+        job = form.save(commit=False)
+        job.recruiter = request.user   
+        job.save()
         return redirect('recruiter_manage_jobs')
     return render(request, 'jobapp/create_mechanical_jobs.html', {'form': form})
 #============================================================================================================
@@ -756,7 +760,7 @@ def list_of_mechanical_jobs(request):
 @login_required(login_url='recruiter_login')
 def update_mechanical_job(request, job_id):
     job = get_object_or_404(MechJobs, id=job_id)
-    form = CreateMechanicalJobForm(request.POST or None, instance=job)
+    form = UpdateMechanicalJobsForm(request.POST or None, instance=job)
     if request.method == 'POST' and form.is_valid():
         form.save()
         return redirect('list_of_mech_jobs')
@@ -782,7 +786,9 @@ def delete_mechanical_job(request, job_id):
 def create_civil_jobs(request):
     form = CreateCivilJobsForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
-        form.save()
+        job = form.save(commit=False)
+        job.recruiter = request.user   
+        job.save()
         return redirect('recruiter_manage_jobs')
     return render(request, 'jobapp/create_civil_jobs.html', {'form': form})
 #============================================================================================================
@@ -796,7 +802,7 @@ def list_of_civil_jobs(request):
 @login_required(login_url='recruiter_login')
 def update_civil_jobs(request, job_id):
     job = get_object_or_404(CivilJobs, id=job_id)
-    form = CreateCivilJobsForm(request.POST or None, instance=job)
+    form = UpdateCivilJobsForm(request.POST or None, instance=job)
     if request.method == 'POST' and form.is_valid():
         form.save()
         return redirect('list_of_civil_jobs')

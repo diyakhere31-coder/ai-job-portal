@@ -39,7 +39,7 @@ class UpdateItJobsForm(ModelForm):
 class CreateMechanicalJobForm(ModelForm):
     class Meta:
         model = MechJobs
-        fields = '__all__'
+        exclude = ['recruiter']
         widgets = {
             "job_title": forms.TextInput(attrs={
                 "placeholder": "Mechanical Engineer / Maintenance Engineer"
@@ -51,7 +51,10 @@ class CreateMechanicalJobForm(ModelForm):
                 "placeholder": "Factory / Site Location"
             }),
         }
-
+class UpdateMechanicalJobsForm(ModelForm):
+    class Meta:
+        model = MechJobs
+        fields = '__all__'
 
 # -------------------------------------------------------------------
 # Civil Jobs Forms
@@ -59,6 +62,21 @@ class CreateCivilJobsForm(ModelForm):
     class Meta:
         model = CivilJobs
         exclude = ['recruiter']
+        widgets = {
+            "job_title": forms.TextInput(attrs={
+                "placeholder": "Civil Engineer"
+            }),
+            "company_name": forms.TextInput(attrs={
+                "placeholder": "ABC Civil Pvt Ltd"
+            }),
+            "job_location": forms.TextInput(attrs={
+                "placeholder": "Factory / Site Location"
+            }),
+        }
+class UpdateCivilJobsForm(ModelForm):
+    class Meta:
+        model = CivilJobs
+        fields = '__all__'
 
 
 # -------------------------------------------------------------------
