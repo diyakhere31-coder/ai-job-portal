@@ -42,7 +42,7 @@ An intelligent, domain-aware job portal built using Django that leverages NLP an
 
 \- AI/NLP: scikit-learn, TF-IDF, cosine similarity
 
-\- Database: SQLite (local)
+\- Database: SQLite
 
 \- Frontend: HTML, CSS, Bootstrap
 
