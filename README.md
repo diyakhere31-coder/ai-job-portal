@@ -1,6 +1,6 @@
 # 🤖 AI Job Portal (Python + Django + NLP)
 
-\ AI-Based Job Portal 🧠💼
+\ AI-Based Job Portal 
 
 
 
