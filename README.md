@@ -10,7 +10,7 @@ An intelligent, domain-aware job portal built using Django that leverages NLP an
 
 \🚀 Key Features
 
-\- AI-powered resume-to-job matching using TF-IDF \& cosine similarity
+\- AI-Powered resume-to-job matching using TF-IDF \& cosine similarity
 
 \- Weighted skill scoring with domain-specific logic
 
