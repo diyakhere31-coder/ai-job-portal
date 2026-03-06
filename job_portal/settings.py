@@ -20,12 +20,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-5yxse=1sic@5-5)utc@s%+i2(k_)s641-k_i+e73pq1*o4i=$&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ["ai-job-portal-gmt0.onrender.com"]
+ALLOWED_HOSTS = ["ai-job-portal-gmt0.onrender.com", "localhost", "127.0.0.1"]
 
 
 # Application definition
